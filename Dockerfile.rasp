@@ -1,0 +1,33 @@
+FROM ubuntu:20.04
+
+RUN apt-get update
+
+RUN DEBIAN_FRONTEND=noninteractive \
+    TZ=Etc/UTC apt install -y tzdata
+
+RUN apt-get upgrade
+
+RUN apt-get install -y python3.12 \
+    python3-pip \
+    python3-opencv \
+    redis \
+    libsdl-dev \
+    libsdl-image1.2-dev \
+    libsdl-mixer1.2-dev \
+    libsdl-ttf2.0-dev \
+    libsmpeg-dev \
+    libportmidi-dev \
+    libavformat-dev \
+    libswscale-dev
+
+COPY pi_cam/requirements.txt requirements.txt
+
+RUN pip install -r requirements.txt
+
+COPY pi_cam/ pi_cam/
+
+ARG AWS_IP
+
+ENV AIP=$AWS_IP
+
+CMD python3 pi_cam/periodic_image_sender.py -ip ${AIP}

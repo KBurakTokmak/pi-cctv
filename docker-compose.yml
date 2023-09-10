@@ -1,0 +1,25 @@
+version: '3'
+services:
+  redis:
+    image: redis
+    container_name: my-redis-container
+    ports:
+      - "6688:6379"
+    networks:
+      - my-network
+
+  web-server:
+    build:
+      dockerfile: Dockerfile.fastapi
+    container_name: fastapi_backend
+    ports:
+      - "80:80"
+    depends_on:
+      - redis
+    networks:
+      - my-network
+    volumes:
+      - ./database:/database
+
+networks:
+  my-network:

@@ -1,0 +1,35 @@
+FROM ubuntu:20.04
+
+RUN apt-get update
+
+RUN DEBIAN_FRONTEND=noninteractive \
+    TZ=Etc/UTC apt install -y tzdata
+
+RUN apt-get upgrade
+
+RUN apt-get install -y python3.9 \
+    python3-pip \
+    git \
+    wget 
+
+EXPOSE 80
+
+COPY FastAPI_backend/requirements.txt requirements.txt
+
+RUN pip install -r requirements.txt
+
+COPY FastAPI_backend/ FastAPI_backend/
+
+RUN git clone https://github.com/arsfutura/face-recognition.git
+
+RUN cp -r face-recognition/face_recognition FastAPI_backend/
+
+RUN rm -r face-recognition
+
+RUN wget https://cloud.skybase.ai/index.php/s/dkCsRXBra7iaPqL/download/face_recogniser.pkl
+
+RUN mkdir FastAPI_backend/model
+
+RUN mv face_recogniser.pkl ./FastAPI_backend/model/
+
+CMD python3 FastAPI_backend/main.py -p 80
