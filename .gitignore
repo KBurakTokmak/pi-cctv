@@ -11,4 +11,4 @@
 **/.pytest_cache/
 *.env
 */camera_log.db
-/face-recognition/
+**/face-recognition

@@ -3,18 +3,17 @@ import argparse
 import base64
 import threading
 from time import sleep
-from typing import Tuple, no_type_check
+from typing import no_type_check
 
 import cv2
 import numpy
 import pygame
 import redis
-import torch
 from RaspCam import RaspCam
 
 # declearing constants
-RESOLUTION_HEIGHT = 480
-RESOLUTION_WIDTH = 640
+RESOLUTION_HEIGHT = 720
+RESOLUTION_WIDTH = 1280
 
 
 @no_type_check
@@ -37,37 +36,6 @@ def parse_args() -> (str):
     return args.ip
 
 
-def process_frame(frame: numpy.ndarray, model) -> Tuple[numpy.ndarray, bool]:
-    """
-    Processes the frame recieved from cam
-    if person found returns proccessed image and True
-    if not returns the original frame and False"""
-    try:
-        clr_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        results = model(clr_frame, size=RESOLUTION_WIDTH)
-        found_objects = str(results.pandas().xyxy[0].value_counts('name'))
-        if "person" in found_objects:
-            result_image = results.render()[0]
-            result_image = cv2.cvtColor(result_image, cv2.COLOR_BGR2RGB)
-            return result_image, True
-        else:
-            return frame, False
-    except Exception as e:
-        print(f"Error while processing image:{e}")
-        return frame, False
-
-
-def init_model():
-    """For initializing the model additional settings can be added to this function"""
-    try:
-        model = torch.hub.load('ultralytics/yolov5', 'yolov5s')  # load functions returns any
-        model.classes = [0]
-        model.conf = 0.25  # up confidence if detecting other objects as person
-        return model
-    except Exception as e:
-        print(f"Error while initializing the model:{e}")
-
-
 def play_alarm_on_redis_signal(pi_redis: redis.StrictRedis) -> None:
     pygame.mixer.pre_init(buffer=2048)
     pygame.mixer.init()
@@ -88,15 +56,11 @@ def play_alarm_on_redis_signal(pi_redis: redis.StrictRedis) -> None:
 def periodic_image_sender(pi_redis: redis.StrictRedis) -> None:
     try:
         cam = RaspCam(RESOLUTION_HEIGHT, RESOLUTION_WIDTH)
-        model = init_model()
         while True:
             frame, is_successful = cam.capture_frame()
             if not is_successful:
                 break
-            processed_image, human_detected = process_frame(frame, model)
-            if human_detected:
-                print('sending image to redis channel')
-                send_image_to_redis_channel(processed_image, pi_redis)
+            send_image_to_redis_channel(frame, pi_redis)
             cam.wait_next_frame(0.25)
             cam.camera = cam.initialize_cam()  # re init cam for new capture
         cam.end_cv_capture()
