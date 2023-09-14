@@ -19,7 +19,8 @@ services:
     networks:
       - my-network
     volumes:
-      - ./database:/database
+      - ./database:/app/database
+      - ./model:/app/model
 
 networks:
   my-network:

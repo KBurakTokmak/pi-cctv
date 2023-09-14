@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw
 from utils.image_utils import ExifOrientationNormalize
 
 # define constants
-MODEL_PATH = 'FastAPI_backend/model/face_recogniser.pkl'
+MODEL_PATH = 'model/face_recogniser.pkl'
 CONFIDENCE_TRESHOLD = 0.49
 DRAW_MARGIN = 5
 
