@@ -1,6 +1,6 @@
-# Pi-cctv-XI
+# Pi-cctv
 ## Table of Contents
-- [pi-cctv-XI](#pi-cctv-xi)
+- [pi-cctv](#pi-cctv)
   - [Table of Contents](#table-of-contents)
   - [Pre Setup](#pre-setup)
     - [Raspberry](#raspberry)
