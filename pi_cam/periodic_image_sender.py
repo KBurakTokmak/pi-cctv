@@ -48,7 +48,7 @@ def play_alarm_on_redis_signal(pi_redis: redis.StrictRedis) -> None:
                 print(message['data'])
                 if message['data'] == "Sound the alarm!":
                     alarm_sound.play()
-            sleep(1)
+            sleep(0.1)
     except Exception as e:
         print(f'Error while reciving messages in redis:{e}')
 
@@ -61,7 +61,7 @@ def periodic_image_sender(pi_redis: redis.StrictRedis) -> None:
             if not is_successful:
                 break
             send_image_to_redis_channel(frame, pi_redis)
-            cam.wait_next_frame(0.25)
+            cam.wait_next_frame(0.2)
             cam.camera = cam.initialize_cam()  # re init cam for new capture
         cam.end_cv_capture()
     except Exception as e:
