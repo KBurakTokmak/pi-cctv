@@ -22,6 +22,12 @@ def read_root():
 
 @app.get("/rasp_cam")
 def show_image() -> FileResponse:
+    """Show the latest detected image"""
+    return FileResponse("detect_image.jpg")
+
+
+@app.get("/latest_frame")
+def show_image() -> FileResponse:
     """Show the latest uploaded image"""
     return FileResponse("uploaded_image.jpg")
 
@@ -45,14 +51,19 @@ def redis_service(model: any) -> None:
             encoded_image = message['data']
             if encoded_image != 1:
                 image_data = base64.b64decode(encoded_image)
-                image = Image.open(image_data)
+                with open('uploaded_image.jpg', 'wb') as file:
+                    file.write(image_data)
+                image = Image.open('uploaded_image.jpg')
                 image_array = convert_image_to_numpyarray(image)
                 processed_image, human_detected = process_frame(image_array, model)
                 if human_detected:
-                    image = Image.fromarray(image_array)
-                    image.save('uploaded_image.jpg')
+                    print('person detected')
+                    image = Image.fromarray(processed_image)
+                    image.save('detect_image.jpg')
                     aws_redis.publish('alarm', 'Sound the alarm!')
-                    find_and_write_name_on_image("uploaded_image.jpg")
+                    find_and_write_name_on_image("detect_image.jpg")
+                else:
+                    print('no person detected')
         time.sleep(0.1)
 
 

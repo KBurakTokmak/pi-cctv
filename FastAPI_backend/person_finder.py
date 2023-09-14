@@ -44,5 +44,5 @@ def process_frame(frame: numpy.ndarray, model) -> Tuple[numpy.ndarray, bool]:
 
 
 def convert_image_to_numpyarray(image: Image) -> numpy.ndarray:
-    image_array = numpy.ndarray(image)
+    image_array = numpy.asarray(image)
     return image_array
