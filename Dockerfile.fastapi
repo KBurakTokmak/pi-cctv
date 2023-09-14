@@ -12,13 +12,17 @@ RUN apt-get upgrade
 RUN apt-get install -y python3.9 \
     python3-pip \
     git \
-    wget 
+    wget \
+    libgl1-mesa-glx \
+    libglib2.0-0 
 
 EXPOSE 80
 
 COPY FastAPI_backend/requirements.txt .
 
 RUN pip install -r requirements.txt
+
+RUN apt-get install -y 
 
 COPY FastAPI_backend/ ./FastAPI_backend/
 
