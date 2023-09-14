@@ -2,7 +2,7 @@ import joblib
 from db_operations import log_person_to_database
 from face_recognition.face_recogniser import Face
 from PIL import Image, ImageDraw
-from utils.image_utils import ExifOrientationNormalize
+from image_utils import ExifOrientationNormalize
 
 # define constants
 MODEL_PATH = 'model/face_recogniser.pkl'
