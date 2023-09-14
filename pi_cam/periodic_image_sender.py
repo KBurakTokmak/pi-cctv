@@ -6,7 +6,6 @@ from time import sleep
 from typing import no_type_check
 
 import cv2
-import numpy
 import pygame
 import redis
 from RaspCam import RaspCam

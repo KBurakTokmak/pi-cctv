@@ -9,7 +9,8 @@ import uvicorn
 from face_finder import find_and_write_name_on_image
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
-from person_finder import init_model, process_frame, convert_image_to_numpyarray
+from person_finder import (convert_image_to_numpyarray, init_model,
+                           process_frame)
 
 app = FastAPI()
 
@@ -27,7 +28,7 @@ def show_image() -> FileResponse:
 
 
 @app.get("/latest_frame")
-def show_image() -> FileResponse:
+def show_latest_image() -> FileResponse:
     """Show the latest uploaded image"""
     return FileResponse("uploaded_image.jpg")
 

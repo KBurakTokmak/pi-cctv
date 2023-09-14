@@ -5,7 +5,6 @@ import cv2
 import numpy
 import torch
 
-
 # declearing constants
 RESOLUTION_HEIGHT = 960
 RESOLUTION_WIDTH = 1280
