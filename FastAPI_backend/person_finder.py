@@ -1,5 +1,5 @@
 from PIL import Image
-from typing import Tuple
+from typing import Tuple, Any
 
 import cv2
 import numpy
@@ -10,7 +10,7 @@ RESOLUTION_HEIGHT = 960
 RESOLUTION_WIDTH = 1280
 
 
-def init_model():
+def init_model() -> Any:
     """For initializing the model additional settings can be added to this function"""
     try:
         model = torch.hub.load('ultralytics/yolov5', 'yolov5s')  # load functions returns any

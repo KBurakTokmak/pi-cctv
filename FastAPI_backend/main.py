@@ -3,6 +3,7 @@ import base64
 import threading
 import time
 from PIL import Image
+from typing import Any
 
 import redis
 import uvicorn
@@ -41,7 +42,7 @@ def parse_args() -> int:
     return args.p
 
 
-def redis_service(model: any) -> None:
+def redis_service(model: Any) -> None:
     aws_redis = redis.StrictRedis(host='redis', port=6379, db=0)
     pubsub = aws_redis.pubsub()
     pubsub.subscribe('image_channel')
