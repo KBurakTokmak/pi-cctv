@@ -4,7 +4,6 @@
   - [Table of Contents](#table-of-contents)
   - [Pre Setup](#pre-setup)
     - [Raspberry](#raspberry)
-    - [AWS Server](#aws-server)
   - [Setup](#setup)
     
 
