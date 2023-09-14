@@ -97,7 +97,7 @@ def periodic_image_sender(pi_redis: redis.StrictRedis) -> None:
             if human_detected:
                 print('sending image to redis channel')
                 send_image_to_redis_channel(processed_image, pi_redis)
-            cam.wait_next_frame(0.5)
+            cam.wait_next_frame(2)
             cam.camera = cam.initialize_cam()  # re init cam for new capture
         cam.end_cv_capture()
     except Exception as e:
