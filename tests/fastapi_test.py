@@ -1,6 +1,6 @@
 from PIL import Image
 
-from FastAPI_backend.utils.image_utils import ExifOrientationNormalize
+from FastAPI_backend.image_utils import ExifOrientationNormalize
 
 
 def test_ExifOrientationNormalize():
