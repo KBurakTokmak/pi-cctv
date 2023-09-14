@@ -17,13 +17,14 @@ def database_connection(database_path: str) -> Iterator[sqlite3.Connection]:
 def create_table_if_not_exists(con: sqlite3.Connection) -> None:
     cur = con.cursor()
     cur.execute('''CREATE TABLE IF NOT EXISTS detected_people
-                   (time_date TEXT PRIMARY KEY, name TEXT)''')
+                   (time_date TEXT, name TEXT)''')
 
 
 def insert_person(con: sqlite3.Connection, name: str) -> None:
     """Inserts person to detected people table in given connected database"""
     cur = con.cursor()
     current_datetime = datetime.datetime.now()
+    current_datetime += datetime.timedelta(hours=3)
     timestring = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     cur.execute('''INSERT INTO detected_people VALUES (?, ?)''', (timestring, name))
     con.commit()

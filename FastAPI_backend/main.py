@@ -66,7 +66,7 @@ def redis_service(model: Any) -> None:
                     find_and_write_name_on_image("detect_image.jpg")
                 else:
                     print('no person detected')
-        time.sleep(0.1)
+        time.sleep(0.05)
 
 
 if __name__ == '__main__':
