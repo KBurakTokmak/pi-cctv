@@ -1,5 +1,4 @@
 from typing import  Any, Tuple
-
 import cv2
 import numpy
 import torch
