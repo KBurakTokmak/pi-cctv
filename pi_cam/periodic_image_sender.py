@@ -22,8 +22,6 @@ def send_image_to_redis_channel(image: cv2.UMat, redis: redis.StrictRedis) -> No
     try:
         ret, buffer = cv2.imencode('.jpg', image)
         buffer = buffer.tobytes()
-        with open('captured_image.jpg', 'wb') as file:
-                    file.write(buffer)
         buffer = base64.b64encode(buffer)
         pi_redis.publish('image_channel', buffer)
     except Exception as e:
@@ -62,6 +60,7 @@ def periodic_image_sender(pi_redis: redis.StrictRedis) -> None:
             frame, is_successful = cam.capture_frame()
             if not is_successful:
                 break
+            cv2.imwrite('captured_image.jpg', frame)
             send_image_to_redis_channel(frame, pi_redis)
             cam.wait_next_frame(0.25)
             cam.camera = cam.initialize_cam()  # re init cam for new capture
