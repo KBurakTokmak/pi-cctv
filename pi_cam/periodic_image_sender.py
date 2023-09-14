@@ -12,8 +12,8 @@ import redis
 from RaspCam import RaspCam
 
 # declearing constants
-RESOLUTION_HEIGHT = 480
-RESOLUTION_WIDTH = 640
+RESOLUTION_HEIGHT = 960
+RESOLUTION_WIDTH = 1280
 
 
 @no_type_check
@@ -48,7 +48,7 @@ def play_alarm_on_redis_signal(pi_redis: redis.StrictRedis) -> None:
                 print(message['data'])
                 if message['data'] == "Sound the alarm!":
                     alarm_sound.play()
-            sleep(0.25)
+            sleep(1)
     except Exception as e:
         print(f'Error while reciving messages in redis:{e}')
 
