@@ -60,7 +60,6 @@ def periodic_image_sender(pi_redis: redis.StrictRedis) -> None:
             frame, is_successful = cam.capture_frame()
             if not is_successful:
                 break
-            cv2.imwrite('captured_image.jpg', frame)
             send_image_to_redis_channel(frame, pi_redis)
             cam.wait_next_frame(0.25)
             cam.camera = cam.initialize_cam()  # re init cam for new capture

@@ -1,5 +1,4 @@
 from PIL import Image
-from time import sleep
 from typing import Tuple
 
 import cv2
@@ -8,7 +7,7 @@ import torch
 
 
 # declearing constants
-RESOLUTION_HEIGHT = 720
+RESOLUTION_HEIGHT = 960
 RESOLUTION_WIDTH = 1280
 
 
@@ -17,7 +16,7 @@ def init_model():
     try:
         model = torch.hub.load('ultralytics/yolov5', 'yolov5s')  # load functions returns any
         model.classes = [0]
-        model.conf = 0.25  # up confidence if detecting other objects as person
+        model.conf = 0.33  # up confidence if detecting other objects as person
         return model
     except Exception as e:
         print(f"Error while initializing the model:{e}")
