@@ -1,7 +1,7 @@
 **/__pycache__/
 *.pyc
 *.jpg
-/FastAPI_backend/model/
+**/model/
 /FastAPI_backend/fonts/
 /FastAPI_backend/face_recognition/
 /System_services/variables.env
@@ -11,3 +11,4 @@
 **/.pytest_cache/
 *.env
 */camera_log.db
+/face-recognition/
