@@ -1,9 +1,9 @@
-from PIL import Image
-from typing import Tuple, Any
+from typing import  Any, Tuple
 
 import cv2
 import numpy
 import torch
+from PIL import Image
 
 # declearing constants
 RESOLUTION_HEIGHT = 960

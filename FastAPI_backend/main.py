@@ -2,7 +2,6 @@ import argparse
 import base64
 import threading
 import time
-from PIL import Image
 from typing import Any
 
 import redis
@@ -12,6 +11,7 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from person_finder import (convert_image_to_numpyarray, init_model,
                            process_frame)
+from PIL import Image
 
 app = FastAPI()
 
