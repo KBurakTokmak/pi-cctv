@@ -17,11 +17,13 @@ RESOLUTION_WIDTH = 1280
 
 
 @no_type_check
-def send_image_to_redis_channel(image: numpy.ndarray, redis: redis.StrictRedis) -> None:
+def send_image_to_redis_channel(image: cv2.UMat, redis: redis.StrictRedis) -> None:
     '''Send image bytes(base64) to image_channel channel on specified redis connection'''
     try:
         ret, buffer = cv2.imencode('.jpg', image)
         buffer = buffer.tobytes()
+        with open('captured_image.jpg', 'wb') as file:
+                    file.write(buffer)
         buffer = base64.b64encode(buffer)
         pi_redis.publish('image_channel', buffer)
     except Exception as e:

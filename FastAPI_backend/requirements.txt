@@ -10,3 +10,4 @@ numpy==1.24.4
 python-multipart==0.0.6
 redis==5.0.0
 opencv_python==4.8.0.76
+pandas==2.0.3
