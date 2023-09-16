@@ -11,8 +11,8 @@ import redis
 from RaspCam import RaspCam
 
 # declearing constants
-RESOLUTION_HEIGHT = 960
-RESOLUTION_WIDTH = 1280
+RESOLUTION_HEIGHT = 1440
+RESOLUTION_WIDTH = 1920
 
 
 @no_type_check

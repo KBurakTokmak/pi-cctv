@@ -6,8 +6,8 @@ import torch
 from PIL import Image
 
 # declearing constants
-RESOLUTION_HEIGHT = 960
-RESOLUTION_WIDTH = 1280
+RESOLUTION_HEIGHT = 1440
+RESOLUTION_WIDTH = 1920
 
 
 def init_model() -> Any:
