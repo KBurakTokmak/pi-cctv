@@ -8,12 +8,16 @@ import redis
 import uvicorn
 from face_finder import find_and_write_name_on_image
 from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from person_finder import (convert_image_to_numpyarray, init_model,
                            process_frame)
 from PIL import Image
 
 app = FastAPI()
+
+
+app.mount("/static", StaticFiles(directory="FastAPI_backend/static"), name="static")
 
 
 @app.get("/")
@@ -22,16 +26,68 @@ def read_root():
     return {"Hello": "World"}
 
 
-@app.get("/rasp_cam")
-def show_image() -> FileResponse:
-    """Show the latest detected image"""
-    return FileResponse("detect_image.jpg")
+@app.get("/rasp_cam", response_class=HTMLResponse)
+def show_image() -> str:
+    """Show the latest detected image with auto-refresh"""
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Raspberry Pi Camera</title>
+    </head>
+    <body>
+        <h1>Raspberry Pi Camera</h1>
+        <img id="raspCamImage" src="/static/detect_image.jpg" alt="Raspberry Pi Camera">
+        <script>
+            function refreshImage() {
+                // Get a reference to the image element
+                var img = document.getElementById("raspCamImage");
+
+                // Generate a random parameter to force browser refresh (cache busting)
+                var randomParam = Math.random();
+
+                // Update the image source with the random parameter
+                img.src = "/static/detect_image.jpg?" + randomParam;
+            }
+
+            // Refresh the image every 1 seconds (1000 milliseconds)
+            setInterval(refreshImage, 1000);
+        </script>
+    </body>
+    </html>
+    """
 
 
-@app.get("/latest_frame")
-def show_latest_image() -> FileResponse:
-    """Show the latest uploaded image"""
-    return FileResponse("uploaded_image.jpg")
+@app.get("/latest_frame", response_class=HTMLResponse)
+def show_latest_image() -> str:
+    """Show the latest detected image with auto-refresh"""
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Raspberry Pi Camera</title>
+    </head>
+    <body>
+        <h1>Raspberry Pi Camera</h1>
+        <img id="raspCamImage" src="/static/uploaded_image.jpg" alt="Raspberry Pi Camera">
+        <script>
+            function refreshImage() {
+                // Get a reference to the image element
+                var img = document.getElementById("raspCamImage");
+
+                // Generate a random parameter to force browser refresh (cache busting)
+                var randomParam = Math.random();
+
+                // Update the image source with the random parameter
+                img.src = "/static/uploaded_image.jpg?" + randomParam;
+            }
+
+            // Refresh the image every 1 seconds (1000 milliseconds)
+            setInterval(refreshImage, 1000);
+        </script>
+    </body>
+    </html>
+    """
 
 
 def parse_args() -> int:
@@ -53,17 +109,17 @@ def redis_service(model: Any) -> None:
             encoded_image = message['data']
             if encoded_image != 1:
                 image_data = base64.b64decode(encoded_image)
-                with open('uploaded_image.jpg', 'wb') as file:
+                with open('FastAPI_backend/static/uploaded_image.jpg', 'wb') as file:
                     file.write(image_data)
-                image = Image.open('uploaded_image.jpg')
+                image = Image.open('FastAPI_backend/static/uploaded_image.jpg')
                 image_array = convert_image_to_numpyarray(image)
                 processed_image, human_detected = process_frame(image_array, model)
                 if human_detected:
                     print('person detected')
                     image = Image.fromarray(processed_image)
-                    image.save('detect_image.jpg')
+                    image.save('FastAPI_backend/static/detect_image.jpg')
                     aws_redis.publish('alarm', 'Sound the alarm!')
-                    find_and_write_name_on_image("detect_image.jpg")
+                    find_and_write_name_on_image("FastAPI_backend/static/detect_image.jpg")
                 else:
                     print('no person detected')
         time.sleep(0.05)
