@@ -32,4 +32,8 @@ RUN cp -r face-recognition/face_recognition FastAPI_backend/
 
 RUN rm -r face-recognition
 
+RUN python3 FastAPI_backend/model_init.py
+
+RUN mkdir FastAPI_backend/static
+
 CMD python3 FastAPI_backend/main.py -p 80
