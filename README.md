@@ -32,7 +32,7 @@
 * Install docker on both devices. `curl -sSL https://get.docker.com | sh` is the command I`ve used.
 * On AWS cd into cloned repo and use `sudo docker compose up` to build the image and run the required containers.
 * On Raspberry pi cd into cloned pi-cctv. Run the command while changing `${YOUR_AWS_IP}` to your aws ip address `sudo docker build -f Dockerfile.rasp --build-arg AWS_IP=${YOUR_AWS_IP} -t imagesender .`
-* Than run the built container as `sudo docker container run --privileged -it -d imagesender` . It will take some time(5mins) for container to build yolov5 model.
+* Than run the built container as `sudo docker container run --privileged -it -d imagesender` .
 
 Now your raspberry pi will send images to your aws server automatically and aws will do the face recognition. Whenever aws server recieves an image with person detected it will send signal to pi to sound alarm.
 
