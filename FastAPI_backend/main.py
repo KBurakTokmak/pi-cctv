@@ -74,10 +74,10 @@ def show_latest_image() -> str:
             function refreshImage() {
                 // Get a reference to the image element
                 var img = document.getElementById("raspCamImage");
-                
+
                 // Generate a random parameter to force browser refresh (cache busting)
                 var randomParam = Math.random();
-                
+
                 // Update the image source with the random parameter
                 img.src = "/static/uploaded_image.jpg?" + randomParam;
             }
