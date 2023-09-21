@@ -102,7 +102,7 @@ def redis_service(model: Any) -> None:
     aws_redis = redis.StrictRedis(host='redis', port=6379, db=0)
     pubsub = aws_redis.pubsub()
     pubsub.subscribe('image_channel')
-    model = load_model()
+    face_model = load_model()
     while True:
         print('checking redis channel')
         for message in pubsub.listen():
@@ -119,7 +119,7 @@ def redis_service(model: Any) -> None:
                     image = Image.fromarray(processed_image)
                     image.save('FastAPI_backend/static/detect_image.jpg')
                     aws_redis.publish('alarm', 'Sound the alarm!')
-                    find_and_write_name_on_image("FastAPI_backend/static/detect_image.jpg", model)
+                    find_and_write_name_on_image("FastAPI_backend/static/detect_image.jpg", face_model)
                 else:
                     print('no person detected')
         time.sleep(0.05)
