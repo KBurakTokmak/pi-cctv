@@ -1,5 +1,6 @@
 import argparse
 import base64
+import io
 import threading
 import time
 from typing import Any
@@ -111,7 +112,7 @@ def redis_service(model: Any) -> None:
                 image_data = base64.b64decode(encoded_image)
                 with open('FastAPI_backend/static/uploaded_image.jpg', 'wb') as file:
                     file.write(image_data)
-                image = Image.open('FastAPI_backend/static/uploaded_image.jpg')
+                image = Image.open(io.BytesIO(image_data))
                 image_array = convert_image_to_numpyarray(image)
                 processed_image, human_detected = process_frame(image_array, model)
                 if human_detected:
