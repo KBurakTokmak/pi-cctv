@@ -6,7 +6,7 @@ from typing import Any
 
 import redis
 import uvicorn
-from face_finder import find_and_write_name_on_image
+from face_finder import find_and_write_name_on_image, load_model
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -102,7 +102,7 @@ def redis_service(model: Any) -> None:
     aws_redis = redis.StrictRedis(host='redis', port=6379, db=0)
     pubsub = aws_redis.pubsub()
     pubsub.subscribe('image_channel')
-
+    model = load_model()
     while True:
         print('checking redis channel')
         for message in pubsub.listen():
@@ -119,7 +119,7 @@ def redis_service(model: Any) -> None:
                     image = Image.fromarray(processed_image)
                     image.save('FastAPI_backend/static/detect_image.jpg')
                     aws_redis.publish('alarm', 'Sound the alarm!')
-                    find_and_write_name_on_image("FastAPI_backend/static/detect_image.jpg")
+                    find_and_write_name_on_image("FastAPI_backend/static/detect_image.jpg", model)
                 else:
                     print('no person detected')
         time.sleep(0.05)
