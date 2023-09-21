@@ -1,12 +1,13 @@
 import argparse
 import base64
+import io
 import threading
 import time
 from typing import Any
 
 import redis
 import uvicorn
-from face_finder import find_and_write_name_on_image
+from face_finder import find_and_write_name_on_image, load_model
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -102,7 +103,7 @@ def redis_service(model: Any) -> None:
     aws_redis = redis.StrictRedis(host='redis', port=6379, db=0)
     pubsub = aws_redis.pubsub()
     pubsub.subscribe('image_channel')
-
+    face_model = load_model()
     while True:
         print('checking redis channel')
         for message in pubsub.listen():
@@ -111,7 +112,7 @@ def redis_service(model: Any) -> None:
                 image_data = base64.b64decode(encoded_image)
                 with open('FastAPI_backend/static/uploaded_image.jpg', 'wb') as file:
                     file.write(image_data)
-                image = Image.open('FastAPI_backend/static/uploaded_image.jpg')
+                image = Image.open(io.BytesIO(image_data))
                 image_array = convert_image_to_numpyarray(image)
                 processed_image, human_detected = process_frame(image_array, model)
                 if human_detected:
@@ -119,7 +120,7 @@ def redis_service(model: Any) -> None:
                     image = Image.fromarray(processed_image)
                     image.save('FastAPI_backend/static/detect_image.jpg')
                     aws_redis.publish('alarm', 'Sound the alarm!')
-                    find_and_write_name_on_image("FastAPI_backend/static/detect_image.jpg")
+                    find_and_write_name_on_image("FastAPI_backend/static/detect_image.jpg", face_model)
                 else:
                     print('no person detected')
         time.sleep(0.05)

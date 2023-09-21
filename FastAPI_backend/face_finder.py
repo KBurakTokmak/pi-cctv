@@ -63,10 +63,9 @@ def pre_process_image(img_path: str) -> Image.Image:
     return img
 
 
-def find_and_write_name_on_image(img_path: str) -> None:
+def find_and_write_name_on_image(img_path: str, model: joblib.load) -> None:
     """Find known or unknown faces on the image and write the names"""
     img = pre_process_image(img_path)
-    model = load_model()
     faces = find_faces(img, model)
     if faces:
         write_faces_on_image(faces, img)
